@@ -21,6 +21,11 @@ namespace BubbleTier
             return _sortService.GetOrderedNumbers();
         }
 
+        //public (IEnumerable<int> ordered, IEnumerable<int> unordered) GetOrderedNumersPi() {
+            // Se vogliamo esporre anche i numeri non ordinati, possiamo aggiungere un metodo che chiama direttamente il repository per ottenere i dati non ordinati.
+            // In questo caso, chiama il metodo GetAll del repository per ottenere i numeri non ordinati.
+            //return _sortService.GetOrderedPiDigits();
+        //}
 
     }
 }

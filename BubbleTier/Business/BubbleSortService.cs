@@ -14,17 +14,15 @@ namespace BubbleTier
         /// Questo si chiama Campo della classe o field.
         /// In questo caso è una variabile che appartiene alla classe e viene usata per memorizzare un riferimento a un oggetto di tipo NumbersRepository, che è necessario per accedere ai dati da ordinare.)
         /// </summary>
-        private readonly NumbersRepository _numberRepository;
+        private readonly INumbersRepository _numberRepository;
 
         // NON serve un campo nel servizio per gestire la lista di numeri... non è compito del servizio procacciarsi i dati...e soprattutto non serve statico perche vivrebbe trasversalmente alle istanze delle classi, e non è questo il comportamento che vogliamo. 
         //public static int[] numbersUnorderedSequence { get; private set; }
-        public BubbleSortService(NumbersRepository numberRepository) {
-            // siccome per ottenere i dati in questa classe di servizio abbiamo bisogno di un repository...
-            // lo passiamo come parametro al costruttore e lo assegniamo al campo della classe,
-            // in questo modo possiamo usarlo in tutti i metodi della classe per ottenere i dati da ordinare.
-            // Questo equivale a dire che BubbleSortService dipende da Repository.
+        public BubbleSortService(INumbersRepository numberRepository)
+        {
             this._numberRepository = numberRepository;
         }
+       
         // Non è compito del servizio ottenere i dati lo fa il repository per noi
         //public static int[] GetRepoData()
         //{
@@ -47,7 +45,7 @@ namespace BubbleTier
             int[] resultantOrderedArray = (int[])numbersUnorderedSequence.Clone();
             int n = resultantOrderedArray.Length;
 
-            for (int i = 0; i < n-1; i++)
+            for (int i = 0; i < n - 1; i++)
             {
                 for (int j = 0; j < n - i - 1; j++)
                 {
@@ -80,5 +78,12 @@ namespace BubbleTier
             // restituisco una tupla con sia i numeri ordinati che i numeri prima dell'ordinamento
             return (ordered, unorderedNumbers);
         }
+
+        //public (IEnumerable<int> ordered, IEnumerable<int> unordered) GetOrderedPiDigits()
+        //{
+        //    var unorderedNumbers = _piGrecoRepository.GetPi();
+        //    var ordered = BubbleSort([.. unorderedNumbers]);
+        //    return (ordered, unorderedNumbers);
+        //}
     }
 }

@@ -5,7 +5,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BubbleTier
 {
-    internal class NumbersRepository
+    internal class NumbersRepository : INumbersRepository
     {
         /// <summary>
         /// Questo metodo restituisce una sequenza di numeri interi casuali compresi tra -5000 e 5000. 
@@ -27,8 +27,9 @@ namespace BubbleTier
                     number = random.Next(-5000, 5001);
                 } while (!usedNumbers.Add(number));
 
-                yield return number;
+                yield return number; //numeri ritornati uno alla volta, senza dover aspettare che tutta la sequenza sia generata
             }
         }
     }
+
 }
