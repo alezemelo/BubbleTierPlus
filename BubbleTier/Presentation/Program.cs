@@ -1,4 +1,5 @@
-﻿namespace BubbleTier
+﻿
+namespace BubbleTier
 {
     // Qyuesto è l'entry point e vedilo al di fuori dei livelli... immaginalo come l'utente finale che consuma il presentation layer
     internal class Program
@@ -11,7 +12,7 @@
             Console.WriteLine("Scegli i dati da ordinare: 1 = casuali, 2 = cifre di PI");
             var choice = Console.ReadLine();
             INumbersRepository repository = choice == "2" ? new PiGrecoRepository() : new NumbersRepository();
-            var service = new BubbleSortService(repository);
+            IBubbleSortService service = new BubbleSortService(repository);
             var controller = new OrderedNumberController(service);
 
             // ora posso consumare il presentation layer

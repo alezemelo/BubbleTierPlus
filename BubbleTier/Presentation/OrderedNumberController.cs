@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
+
 namespace BubbleTier
 {
     internal class OrderedNumberController
     {
-        private readonly BubbleSortService _sortService;
+        private readonly IBubbleSortService _sortService;
 
-        public OrderedNumberController(BubbleSortService sortService) {
+        public OrderedNumberController(IBubbleSortService sortService) {
         
             // Il controller dipende dal Service (non di deve porre il problema delle dipendenze del servizio)
             _sortService = sortService;

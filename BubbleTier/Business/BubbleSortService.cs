@@ -7,7 +7,7 @@ namespace BubbleTier
     /// <summary>
     /// Classe che contiene la logica di business (o chiamala del service layer se preferisci) per eseguire la bubble sort su una lista di interi non ordinati.
     /// </summary>
-    internal class BubbleSortService
+    internal class BubbleSortService: IBubbleSortService
     {
         /// <summary>
         /// The number repository.
