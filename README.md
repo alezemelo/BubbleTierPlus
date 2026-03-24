@@ -2,6 +2,20 @@
 
 Console app che genera una sequenza di numeri casuali, la ordina con bubble sort e mostra a schermo sia i dati originali sia quelli ordinati. La struttura è separata a livelli: repository, service e controller, con `Program` come entry point.
 
+## Struttura del progetto per fasi
+
+1. **Entry point** (`EntryPoint/Program.cs`)  
+   Avvio applicazione e composizione delle dipendenze.
+
+2. **Presentation** (`BubbleTier.Presentation`)  
+   Gestione input/output e coordinamento del flusso tramite il controller.
+
+3. **Business** (`BubbleTier.Business`)  
+   Logica di ordinamento e servizi applicativi.
+
+4. **Repository** (`BubbleTier.Repository`)  
+   Accesso ai dati (numeri casuali o cifre di PI).
+
 ## Struttura e interazione
 ```mermaid
 flowchart TD

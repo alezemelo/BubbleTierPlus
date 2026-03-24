@@ -4,12 +4,12 @@ namespace BubbleTier.Presentation
 {
     public class ControllerToOrder
     {
-        private readonly Business.IBubbleSortService _sortService;
+        private readonly IBubbleSortService _sortService;
 
-        public ControllerToOrder(int choice)
+        public ControllerToOrder(IBubbleSortService sortService)
         {
             // Il controller dipende dal Service (non di deve porre il problema delle dipendenze del servizio)
-            _sortService = new BubbleSortService(choice);
+            this._sortService = sortService;
             
         }
 

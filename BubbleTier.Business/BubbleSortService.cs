@@ -10,15 +10,11 @@ namespace BubbleTier.Business
         /// Questo si chiama Campo della classe o field.
         /// In questo caso è una variabile che appartiene alla classe e viene usata per memorizzare un riferimento a un oggetto di tipo NumbersRepository, che è necessario per accedere ai dati da ordinare.)
         /// </summary>
-        private readonly Repository.INumbersRepository _numberRepository;
-        private readonly int choice;
+        private readonly INumbersRepository _numberRepository;
         // NON serve un campo nel servizio per gestire la lista di numeri... non è compito del servizio procacciarsi i dati...e soprattutto non serve statico perche vivrebbe trasversalmente alle istanze delle classi, e non è questo il comportamento che vogliamo. 
         //public static int[] numbersUnorderedSequence { get; private set; }
-        public BubbleSortService(int choice)
+        public BubbleSortService(INumbersRepository repository)
         {
-            this.choice = choice;
-            INumbersRepository repository = choice == 2 ? new PiGrecoRepository() : new NumbersRepository();
-
             this._numberRepository = repository;
         }
 
