@@ -19,11 +19,16 @@ Console app che genera una sequenza di numeri casuali, la ordina con bubble sort
 ## Struttura e interazione
 ```mermaid
 flowchart TD
-    Program[EntryPoint/Program.cs<br/>Entry point] --> Controller[BubbleTier.Presentation/ControllerToOrder.cs<br/>Presentation]
-    Controller --> Service[BubbleTier.Business/BubbleSortService.cs<br/>Service layer]
-    Service --> Repository[BubbleTier.Repository/NumbersRepository.cs<br/>Repository]
-    Service -->|Ordina| BubbleSort[BubbleSort()]
-    Repository -->|GetAll()<br/>Numeri casuali o cifre di PI| Service
+    Program[EntryPoint/Program.cs<br/>Entry point] --> Scope[CreateScope<br/>Per iterazione]
+    Scope --> Controller[BubbleTier.Presentation/ControllerToOrder.cs<br/>Presentation]
+    Controller --> ServiceInterface[IBubbleSortService]
+    ServiceInterface --> Service[BubbleTier.Business/BubbleSortService.cs<br/>Service layer]
+    Service -->|GetRequiredKeyedService| RepoInterface[INumbersRepository<br/>Keyed: random o pigreco]
+    RepoInterface --> NumbersRepo[BubbleTier.Repository/NumbersRepository.cs]
+    RepoInterface --> PiRepo[BubbleTier.Repository/PiGrecoRepository.cs]
+    Service -->|Ordina| BubbleSort[BubbleSort]
+    NumbersRepo -->|GetAll| Service
+    PiRepo -->|GetAll| Service
     Service -->|Tupla ordered/unordered| Controller
     Controller -->|Risultato| Program
 ```
@@ -32,15 +37,17 @@ flowchart TD
 
 La configurazione avviene in `EntryPoint/Program.cs` usando `Host.CreateApplicationBuilder` e `IServiceCollection`:
 
-- `INumbersRepository` viene registrato in base alla scelta dell’utente: `NumbersRepository` o `PiGrecoRepository`.
-- `IBubbleSortService` viene risolto come `BubbleSortService`.
-- `ControllerToOrder` viene risolto dal container e riceve automaticamente `IBubbleSortService` nel costruttore.
+- `INumbersRepository` è registrato come **keyed singleton**:
+  - chiave `"random"` → `NumbersRepository`
+  - chiave `"pigreco"` → `PiGrecoRepository`
+- `IBubbleSortService` e `ControllerToOrder` sono registrati come **scoped** per creare una nuova istanza ad ogni iterazione del loop.
 
 Flusso di risoluzione:
 
 1. `Program` registra i servizi e costruisce l’host.
-2. Il container crea `ControllerToOrder`.
-3. Il container inietta `IBubbleSortService` e, a sua volta, `INumbersRepository` in `BubbleSortService`.
+2. Per ogni scelta utente viene creato uno `scope` (`CreateScope()`).
+3. Il container crea `ControllerToOrder` e inietta `IBubbleSortService`.
+4. `BubbleSortService` risolve il repository corretto con `GetRequiredKeyedService` in base al valore di `Choice`.
 
 ## Dettaglio dei file
 
