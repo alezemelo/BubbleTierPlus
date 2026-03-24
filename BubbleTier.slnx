@@ -1,3 +1,6 @@
 <Solution>
-  <Project Path="BubbleTier/BubbleTier.csproj" />
+  <Project Path="BubbleTier.Business/BubbleTier.Business.csproj" Id="66cd2b2d-02e6-447e-8b33-bbfde5a00957" />
+  <Project Path="BubbleTier.Presentation/BubbleTier.Presentation.csproj" Id="925c618e-b8a9-47f5-b32c-d4fb9946d159" />
+  <Project Path="BubbleTier.Repository/BubbleTier.Repository.csproj" Id="96188523-be8d-4e08-a3cb-367e324b309e" />
+  <Project Path="EntryPoint/EntryPoint.csproj" Id="4f3af39e-4a5f-4408-9fda-0f777996a6cb" />
 </Solution>
