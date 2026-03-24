@@ -1,21 +1,24 @@
 ﻿using BubbleTier.Repository;
+using Microsoft.Extensions.DependencyInjection;
 using static BubbleTier.Business.BubbleSortService;
 
 namespace BubbleTier.Business
 {
     public class BubbleSortService : IBubbleSortService
     {
+        private readonly IServiceProvider _serviceProvider;
+
         /// <summary>
         /// The number repository.
         /// Questo si chiama Campo della classe o field.
         /// In questo caso è una variabile che appartiene alla classe e viene usata per memorizzare un riferimento a un oggetto di tipo NumbersRepository, che è necessario per accedere ai dati da ordinare.)
         /// </summary>
-        private readonly INumbersRepository _numberRepository;
-        // NON serve un campo nel servizio per gestire la lista di numeri... non è compito del servizio procacciarsi i dati...e soprattutto non serve statico perche vivrebbe trasversalmente alle istanze delle classi, e non è questo il comportamento che vogliamo. 
-        //public static int[] numbersUnorderedSequence { get; private set; }
-        public BubbleSortService(INumbersRepository repository)
+        //private readonly INumbersRepository _numberRepository;
+        //// NON serve un campo nel servizio per gestire la lista di numeri... non è compito del servizio procacciarsi i dati...e soprattutto non serve statico perche vivrebbe trasversalmente alle istanze delle classi, e non è questo il comportamento che vogliamo. 
+        ////public static int[] numbersUnorderedSequence { get; private set; }
+        public BubbleSortService(IServiceProvider serviceProvider)
         {
-            this._numberRepository = repository;
+            _serviceProvider = serviceProvider;
         }
 
         // Non è compito del servizio ottenere i dati lo fa il repository per noi
@@ -63,10 +66,10 @@ namespace BubbleTier.Business
         /// I consumatori saranno nel layer di presentazione (o chiamalo UI layer se preferisci) che è quello che si occupa di interagire con l'utente e mostrare i risultati.
         /// </summary>
         /// <returns>Ritorna una tupla con i numeri ordinati e come erano prima dell'ordinamento</returns>
-        public (IEnumerable<int> ordered, IEnumerable<int> unordered) GetOrderedNumbers()
+        public (IEnumerable<int> ordered, IEnumerable<int> unordered) GetOrderedNumbers(Choice choice)
         {
-            var unorderedNumbers = _numberRepository.GetAll();
-
+            var numberRepository = _serviceProvider.GetRequiredKeyedService<INumbersRepository>(choice == Choice.PiGreco ? "pigreco" : "random");
+            var unorderedNumbers = numberRepository.GetAll();
             // Se unorderedNumbers è un IEnumerable<int>, devi convertirlo in un array usando ToArray() prima di passarlo a BubbleSort.
             //return BubbleSort(unorderedNumbers.ToArray()); // ma questo si puo fare oggi con l'espressione di raccolta che vedi qui sotto...
             var ordered = BubbleSort([.. unorderedNumbers]);

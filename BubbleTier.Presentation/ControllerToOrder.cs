@@ -10,15 +10,15 @@ namespace BubbleTier.Presentation
         {
             // Il controller dipende dal Service (non di deve porre il problema delle dipendenze del servizio)
             this._sortService = sortService;
-            
+
         }
 
-        public (IEnumerable<int> ordered, IEnumerable<int> unordered) GetOrderedNumbers()
+        public (IEnumerable<int> ordered, IEnumerable<int> unordered) GetOrderedNumbers(Choice choice)
         {
             // Il controller si occupa di orchestrare le chiamate al servizio e al repository per ottenere i dati ordinati.
             // In questo caso, chiama il metodo BubbleSort del servizio per ordinare i numeri ottenuti dal repository.
             // Il servizio restituisce gia un tipo identico o compatibile con questo livello di presentazione.
-            return _sortService.GetOrderedNumbers();
+            return _sortService.GetOrderedNumbers(choice);
         }
 
         //public (IEnumerable<int> ordered, IEnumerable<int> unordered) GetOrderedNumersPi() {
@@ -27,4 +27,6 @@ namespace BubbleTier.Presentation
         //return _sortService.GetOrderedPiDigits();
         //}
     }
+
+
 }
