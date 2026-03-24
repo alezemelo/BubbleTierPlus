@@ -19,58 +19,67 @@ Console app che genera una sequenza di numeri casuali, la ordina con bubble sort
 ## Struttura e interazione
 ```mermaid
 flowchart TD
-    Program[Presentation/Program.cs<br/>Entry point] --> Controller[Presentation/OrderedNumberController.cs<br/>Presentation]
-    Controller --> Service[Business/BubbleSortService.cs<br/>Service layer]
-    Service --> Repository[Repository/NumbersRepository.cs<br/>Repository]
+    Program[EntryPoint/Program.cs<br/>Entry point] --> Controller[BubbleTier.Presentation/ControllerToOrder.cs<br/>Presentation]
+    Controller --> Service[BubbleTier.Business/BubbleSortService.cs<br/>Service layer]
+    Service --> Repository[BubbleTier.Repository/NumbersRepository.cs<br/>Repository]
     Service -->|Ordina| BubbleSort[BubbleSort()]
-    Repository -->|GetAll()<br/>Numeri casuali| Service
+    Repository -->|GetAll()<br/>Numeri casuali o cifre di PI| Service
     Service -->|Tupla ordered/unordered| Controller
     Controller -->|Risultato| Program
-    Config[Config.cs<br/>Config] -.-> Program
-    Config -.-> Service
 ```
+
+## Dependency Injection
+
+La configurazione avviene in `EntryPoint/Program.cs` usando `Host.CreateApplicationBuilder` e `IServiceCollection`:
+
+- `INumbersRepository` viene registrato in base alla scelta dell’utente: `NumbersRepository` o `PiGrecoRepository`.
+- `IBubbleSortService` viene risolto come `BubbleSortService`.
+- `ControllerToOrder` viene risolto dal container e riceve automaticamente `IBubbleSortService` nel costruttore.
+
+Flusso di risoluzione:
+
+1. `Program` registra i servizi e costruisce l’host.
+2. Il container crea `ControllerToOrder`.
+3. Il container inietta `IBubbleSortService` e, a sua volta, `INumbersRepository` in `BubbleSortService`.
 
 ## Dettaglio dei file
 
-### `BubbleTier/Presentation/Program.cs`
+### `EntryPoint/Program.cs`
 - **Responsabilità**: entry point e composizione delle dipendenze.
 - **Interazioni**:
-  - Istanzia `NumbersRepository`, `BubbleSortService` e `OrderedNumberController`.
+  - Registra `INumbersRepository` in base alla scelta (casuali o PI).
+  - Registra `IBubbleSortService` e `ControllerToOrder`.
   - Chiama `GetOrderedNumbers()` sul controller e stampa i risultati.
 
-### `BubbleTier/Presentation/OrderedNumberController.cs`
+### `BubbleTier.Presentation/ControllerToOrder.cs`
 - **Responsabilità**: presentation layer che espone un metodo semplice per ottenere i dati ordinati.
 - **Interazioni**:
-  - Dipende da `BubbleSortService`.
+  - Dipende da `IBubbleSortService`.
   - Restituisce la tupla con numeri ordinati e non ordinati.
 
-### `BubbleTier/Business/BubbleSortService.cs`
+### `BubbleTier.Business/BubbleSortService.cs`
 - **Responsabilità**: logica di business per l’ordinamento.
 - **Interazioni**:
   - Richiede i dati a `NumbersRepository`.
   - Ordina tramite `BubbleSort()` e restituisce ordered/unordered.
 
-### `BubbleTier/Repository/NumbersRepository.cs`
+### `BubbleTier.Repository/NumbersRepository.cs`
 - **Responsabilità**: accesso ai dati (generazione numeri casuali unici).
 - **Interazioni**:
   - Fornisce i dati al service tramite `GetAll()`.
 
-### `BubbleTier/Repository/PiGrecoRepository.cs`
+### `BubbleTier.Repository/PiGrecoRepository.cs`
 - **Responsabilità**: accesso ai dati (cifre di PI).
 - **Interazioni**:
   - Fornisce i dati al service tramite `GetAll()` quando l'utente sceglie PI.
 
-### `BubbleTier/Business/ServiceInterfaces.cs`
+### `BubbleTier.Business/ServiceInterfaces.cs`
 - **Responsabilità**: definizione dei contratti del service layer.
 - **Interazioni**:
   - Espone `IBubbleSortService` usato dal controller.
 
-### `BubbleTier/Repository/RepoInterfaces.cs`
+### `BubbleTier.Repository/RepoInterfaces.cs`
 - **Responsabilità**: definizione dei contratti del repository layer.
 - **Interazioni**:
   - Espone `INumbersRepository` usato dal service.
 
-### `BubbleTier/Config.cs`
-- **Responsabilità**: configurazioni condivise.
-- **Interazioni**:
-  - Presente come supporto futuro (attualmente non usata nel flusso).
